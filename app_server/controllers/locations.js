@@ -35,7 +35,7 @@ const locationInfo = (req, res) => {
         title: 'Starcups',
         pageHeader: {title: 'Starcups'},
         sidebar: {
-            context: 'Starcups is on Loc8r because it has accessible Wifi and a place to sit down and work',
+            context: ' is on Loc8r because it has accessible Wifi and a place to sit down and work',
             callToAction: 'Please leave a review if you have visited this location' 
         },
         location: {
