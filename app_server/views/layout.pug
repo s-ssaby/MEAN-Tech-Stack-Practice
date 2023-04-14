@@ -7,7 +7,26 @@ html
     link(rel='stylesheet', href='/stylesheets/all.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+    
+    nav(class="navbar fixed-top navbar-expand-md navbar-light")
+      .container-fluid
+        a(class="navbar-brand" href="/") Locater
+        button(class="navbar-toggler" type="button" 
+            data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" 
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" 
+            aria-label="Toggle navigation")
+          span(class="navbar-toggler-icon")
+        div(class="collapse navbar-collapse" id="navbarNavAltMarkup")
+          div(class="navbar-nav")
+            a(class="nav-link active" aria-current="page" href="/") Home
+            a(class="nav-link" href="/about") About
+    .container.content
+      block content
+
+      footer
+        .row
+          .col-12 
+            small &copy; Getting Mean - Simon Holmes/Clive Harber 2018
     script(src="https://code.jquery.com/jquery-3.6.4.min.js",integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=",crossorigin="anonymous", referrerpolicy="no-referrer")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js", integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==", crossorigin="anonymous", referrerpolicy="no-referrer")
     script(src='/javascripts/bootstrap.min.js')
