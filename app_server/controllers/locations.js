@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 /* Homepage */
 const homelist = (req, res) => {
     res.render('locations-list', {
@@ -85,4 +87,4 @@ module.exports = {
     homelist,
     locationInfo,
     addReview
-}
+};
