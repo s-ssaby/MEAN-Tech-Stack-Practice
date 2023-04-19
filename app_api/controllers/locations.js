@@ -8,9 +8,13 @@ const locationsCreate = (req, res) => {
         .json({"status": "success"});
 };
 const locationsReadOne = (req, res) => {
-    res
-        .status(200)
-        .json({"status": "success"});
+    LocationModel
+        .findById(req.params.locationid)
+        .exec((err, location) => {
+            res
+                .status(200)
+                .json(location);
+        });
 };
 const locationsUpdateOne = (req, res) => {
     res
