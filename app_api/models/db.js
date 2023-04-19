@@ -44,4 +44,4 @@ process.once('SIGTERM', () => {
     });
 });
 
-require('../controllers/locations');
+require('./locations');
