@@ -6,6 +6,7 @@ const reviewsCreate = (req, res) => {
         .status(200)
         .json({"status": "success"});
 };
+
 const reviewsReadOne = (req, res) => {
     LocationModel
         .findById(req.params.locationid)
