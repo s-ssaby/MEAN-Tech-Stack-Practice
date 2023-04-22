@@ -1,10 +1,87 @@
 const mongoose = require('mongoose')
 const LocationModel = mongoose.model('Location')
 
+
+
+function setAverageRating (location) {
+    /**
+     * Assumes that location document exists
+     * @param location Location document
+     */
+    if (location.reviews && location.reviews.length > 0) {
+        const count = location.reviews.length;
+        const total = location.reviews.reduce((acc, {rating}) => {
+            return acc + rating;
+        }, 0)
+        location.rating = parseInt(total/count, 10);
+        location.save(err => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(`Average rating updated to ${location.rating}`);
+            }
+        });
+    }
+};
+
+function updateAverageRating (locationID) {
+    LocationModel.findById(locationID)
+        .select('rating reviews')
+        .exec((err, location) => {
+            if (!err) {
+                setAverageRating(location);
+            }
+        });
+};
+
+function addReview  (req, res, location)  {
+    /**
+     * Adds a review to a location
+     * Assumes that location document exists
+     * @param location Location document
+     */
+    const {author, rating, reviewText} = req.body;
+    location.reviews.push({
+        author,
+        rating,
+        reviewText
+    });
+    location.save((err, location) => {
+        if (err) {
+            res
+                .status(400)
+                .json(err);
+        } else {
+            updateAverageRating(location._id);
+            const thisReview = location.reviews.slice(-1).pop();
+            res
+                .status(201)
+                .json(thisReview);
+        }
+    });
+};
+
 const reviewsCreate = (req, res) => {
-    res
-        .status(200)
-        .json({"status": "success"});
+    const locationID  = req.params.locationid
+    if (locationID) {
+        LocationModel
+            .findById(locationID)
+            .select('reviews')
+            .exec((err, location) => {
+                if (err) {
+                    res
+                        .status(400)
+                        .json(err)
+                } else {
+                    // Add Review
+                    addReview(req, res, location);
+                }
+            });
+    } else {
+        res
+            .status(404)
+            .json({"message": "Location not found"});
+    }
 };
 
 const reviewsReadOne = (req, res) => {
