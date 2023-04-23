@@ -125,10 +125,55 @@ const reviewsReadOne = (req, res) => {
         });
 };
 const reviewsUpdateOne = (req, res) => {
-    res
-        .status(200)
-        .json({"status": "success"});
+    if (!req.params.locationid || !req.params.reviewid) {
+        return res
+            .status(404)
+            .json({"message": "Not found, locationid and reviewid required"});
+    }
+    LocationModel
+        .findById(req.params.locationid)
+        .select('reviews')
+        .exec((err, location) => {
+            if (!location) {
+                return res
+                    .status(404)
+                    .json({"message": "Location not found"});
+            } else if (err) {
+                return res
+                    .status(400)
+                    .json(err);
+            }
+            if (location.reviews && location.reviews.length > 0) {
+                const thisReview = location.reviews.id(req.params.reviewid);
+                if (!thisReview) {
+                    res
+                        .status(404)
+                        .json({"message": "Review not found"});
+                } else {
+                    thisReview.author = req.body.author;
+                    thisReview.rating = req.body.rating;
+                    thisReview.reviewText = req.body.reviewText;
+                    location.save((err, location) => {
+                        if (err) {
+                            res
+                                .status(404)
+                                .json(err);
+                        } else {
+                            updateAverageRating(location._id);
+                            res
+                                .status(200)
+                                .json(thisReview)
+                        }
+                    });
+                }
+            } else {
+                res
+                    .status(404)
+                    .json({"message":"No review to update"});
+            }
+        });
 };
+
 const reviewsDeleteOne = (req, res) => {
     res
         .status(200)
