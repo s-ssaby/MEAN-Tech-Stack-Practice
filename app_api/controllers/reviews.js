@@ -175,9 +175,51 @@ const reviewsUpdateOne = (req, res) => {
 };
 
 const reviewsDeleteOne = (req, res) => {
-    res
-        .status(200)
-        .json({"status": "success"});
+    const {locationid, reviewid} = req.params;
+    if (!locationid || !reviewid) {
+        return res
+            .status(404)
+            .json({"message": "Not found, locationid and reviewid required"});
+    }
+    LocationModel
+        .findById(locationid)
+        .select('reviews')
+        .exec((err, location) => {
+            if (!location) {
+                return res
+                    .status(404)
+                    .json({"message": "Location not found"});
+            } else if (err) {
+                return res
+                    .status(400)
+                    .json(err);
+            }
+            if (location.reviews && location.reviews.length > 0) {
+                if (!location.reviews.id(reviewid)) {
+                    return res
+                        .status(404)
+                        .json({"message":"Review not found"});
+                } else {
+                    location.reviews.id(reviewid).remove();
+                    location.save(err => {
+                        if (err) {
+                            return res
+                                .status(404)
+                                .json(err);
+                        } else {
+                            updateAverageRating(location._id);
+                            res
+                                .status(204)
+                                .json(null);
+                        }
+                    });
+                }
+            } else {
+                res
+                    .status(404)
+                    .json({"message":"No review to delete"})
+            }
+        });
 };
 
 module.exports = {
