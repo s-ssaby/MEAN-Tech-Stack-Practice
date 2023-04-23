@@ -88,9 +88,24 @@ const locationsUpdateOne = (req, res) => {
 };
 
 const locationsDeleteOne = (req, res) => {
-    res
-        .status(200)
-        .json({"status": "success"});
+    const {locationid} = req.params
+    if (!locationid) {
+        res
+            .status(404)
+            .json({"message": "No location"})
+    }
+    LocationModel
+        .findByIdAndRemove
+        .exec((err, location) => {
+            if (err) {
+                return res
+                    .status(404)
+                    .json(err);
+            }
+            res
+                .status(204)
+                .json(null);
+        });
 };
 
 // extract necessary location display info like distance and address without reviews
