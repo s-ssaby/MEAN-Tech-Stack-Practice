@@ -1,3 +1,16 @@
+const got = require('got')
+
+//configuration that changes depending on whether run in production or not
+const apiOptions = {
+    server: 'htpp://localhost:3000'
+}
+
+if (process.env.NODE_ENV === 'production') {
+    // use website's domain name
+    apiOptions.server = process.env.DOMAIN;
+}
+
+
 /* Homepage */
 const homelist = (req, res) => {
     res.render('locations-list', {
