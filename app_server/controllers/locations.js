@@ -2,7 +2,7 @@ const got = require('got')
 
 //configuration that changes depending on whether run in production or not
 const apiOptions = {
-    server: 'htpp://localhost:3000'
+    server: 'http://localhost:3000'
 }
 
 if (process.env.NODE_ENV === 'production') {
