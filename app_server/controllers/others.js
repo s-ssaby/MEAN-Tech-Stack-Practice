@@ -11,6 +11,6 @@ const about = (req, res) => {
     });
 };
 
-module.exports = {
+export default {
     about
 };

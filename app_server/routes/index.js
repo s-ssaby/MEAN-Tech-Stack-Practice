@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const ctrlLocations = require('../controllers/locations');
-const ctrlOthers = require('../controllers/others');
+import ctrlLocations from '../controllers/locations.js';
+import ctrlOthers from '../controllers/others.js';
 
 /* Locations */
 router.get('/', ctrlLocations.homelist);
@@ -11,4 +11,4 @@ router.get('/location/review/new', ctrlLocations.addReview);
 /* Other */
 router.get('/about', ctrlOthers.about);
 
-module.exports = router;
+export default router;

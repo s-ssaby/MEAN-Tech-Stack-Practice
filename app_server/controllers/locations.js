@@ -1,4 +1,4 @@
-const got = require('got')
+import got from 'got';
 
 //configuration that changes depending on whether run in production or not
 const apiOptions = {
@@ -10,9 +10,7 @@ if (process.env.NODE_ENV === 'production') {
     apiOptions.server = process.env.DOMAIN;
 }
 
-
-/* Homepage */
-const homelist = (req, res) => {
+const renderHomepage = (req, res, apiBody) => {
     res.render('locations-list', {
         title: 'Locater - find a place to work with WiFi',
         pageHeader: {
@@ -20,26 +18,27 @@ const homelist = (req, res) => {
             strapline: 'Find places to work with WiFi near you!'
         },
         sidebar: 'Locater helps you find places to work when out and about.',
-        locations: [{
-            name: 'Starcups',
-            address: '125 High Street, Reading, RG6 1PS',
-            rating: 3,
-            facilities: ['Drinks', 'Food', '5G WiFi'],
-            distance: '100m'
-        },{
-            name: 'Cafe Hero',
-            address: '125 High Street, Reading, RG6 1PS',
-            rating: 4,
-            facilities: ['Drinks', '5G WiFi'],
-            distance: '200m'
-        },{
-            name: 'Burger Queen',
-            address: '125 High Street, Reading, RG6 1PS',
-            rating: 2,
-            facilities: ['Food'],
-            distance: '300m'
-        }]
+        locations: apiBody
     });
+};
+/* Homepage */
+const homelist = async(req, res) => {
+    const path = '/api/locations';
+    const requestOptions = {
+        url: `${apiOptions.server}${path}`,
+        method: 'GET',
+        searchParams: {
+            lng: -.7992599,
+            lat: 51.378091,
+            maxDistance: 20
+        }
+    };
+    await got.get(
+        requestOptions,
+        (err, response, body) => {
+            renderHomepage(req, res, body);
+        }
+    );
 };
 
 /* Location Info */
@@ -94,8 +93,8 @@ const addReview = (req, res) => {
     });
 };
 
-module.exports = {
+export default {
     homelist,
     locationInfo,
-    addReview
-};
+    addReview,
+}; 

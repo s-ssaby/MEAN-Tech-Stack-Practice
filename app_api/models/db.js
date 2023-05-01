@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 let dbURI = 'mongodb://localhost/Locater'
 if (process.env.NODE_ENV === 'production') {
@@ -44,4 +44,5 @@ process.once('SIGTERM', () => {
     });
 });
 
-require('./locations');
+import './locations.js';
+

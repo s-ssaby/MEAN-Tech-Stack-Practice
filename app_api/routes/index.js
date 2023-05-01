@@ -1,7 +1,7 @@
-const express =  require('express');
+import express from 'express';
 const router = express.Router();
-const ctrlLocations = require('../controllers/locations');
-const ctrlReviews = require('../controllers/reviews');
+import ctrlLocations from '../controllers/locations.js';
+import ctrlReviews from '../controllers/reviews.js';
 
 // locations
 router
@@ -26,4 +26,4 @@ router
     .put(ctrlReviews.reviewsUpdateOne)
     .delete(ctrlReviews.reviewsDeleteOne)
 
-module.exports = router;
+export default router;

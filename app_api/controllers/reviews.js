@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 const LocationModel = mongoose.model('Location')
 
 
@@ -222,7 +222,7 @@ const reviewsDeleteOne = (req, res) => {
         });
 };
 
-module.exports = {
+export default {
     reviewsCreate,
     reviewsDeleteOne,
     reviewsReadOne,

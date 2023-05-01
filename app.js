@@ -1,17 +1,20 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-require('./app_api/models/db');
+import createError from 'http-errors';
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import './app_api/models/db.js';
 
-const indexRouter = require('./app_server/routes/index');
-const apiRouter = require('./app_api/routes/index');
+import indexRouter from './app_server/routes/index.js';
+import apiRouter from './app_api/routes/index.js';
 
 const app = express();
 
 // sets environment variables
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
+
+const __dirname = path.resolve();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'app_server', 'views'));
@@ -43,4 +46,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;

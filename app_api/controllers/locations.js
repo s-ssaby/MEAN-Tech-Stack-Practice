@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 const LocationModel = mongoose.model('Location')
 
 
@@ -137,7 +137,7 @@ const locationsListByDistance = async (req, res) => {
         // limits how far locations can be
         maxDistance: 20000,
         // max results to return
-        limit: 10
+        $limit: 10
     };
     try {
         const results = await LocationModel.aggregate([
@@ -154,13 +154,15 @@ const locationsListByDistance = async (req, res) => {
             .status(200)
             .json(locations)
     } catch (err) {
+        console.log('REQUEST FAILED');
+        console.log(err);
         res
             .status(404)
             .json(err)
     }
 };
 
-module.exports = {
+export default {
     locationsCreate,
     locationsReadOne,
     locationsUpdateOne,
