@@ -11,6 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const renderHomepage = (req, res, apiBody) => {
+    console.log(apiBody)
     res.render('locations-list', {
         title: 'Locater - find a place to work with WiFi',
         pageHeader: {
@@ -25,7 +26,6 @@ const renderHomepage = (req, res, apiBody) => {
 const homelist = async(req, res) => {
     const path = '/api/locations';
     const requestOptions = {
-        url: `${apiOptions.server}${path}`,
         method: 'GET',
         searchParams: {
             lng: -.7992599,
@@ -33,12 +33,8 @@ const homelist = async(req, res) => {
             maxDistance: 20
         }
     };
-    await got.get(
-        requestOptions,
-        (err, response, body) => {
-            renderHomepage(req, res, body);
-        }
-    );
+    const response = await got.get(`${apiOptions.server}${path}`,requestOptions).json()
+    renderHomepage(req, res, response);
 };
 
 /* Location Info */

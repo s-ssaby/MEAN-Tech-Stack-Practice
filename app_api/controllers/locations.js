@@ -110,7 +110,7 @@ const locationsDeleteOne = (req, res) => {
 
 // extract necessary location display info like distance and address without reviews
 // used with below function
-const extract_location_info = (location) => {
+const extract_location_info = (result) => {
     return {
         id: result._id,
         name: result.name,
@@ -118,7 +118,7 @@ const extract_location_info = (location) => {
         rating: result.rating,
         facilities: result.facilities,
         // returns integer meters
-        distance: `${result.distance.calculated.toFixed()} m`
+        distance: `${Math.round(result.dist.calculated)} m`
     }
 };
 
@@ -126,28 +126,15 @@ const extract_location_info = (location) => {
 const locationsListByDistance = async (req, res) => {
     const lng = parseFloat(req.query.lng);
     const lat = parseFloat(req.query.lat);
-    const near = {
-        type: "Point",
-        coords: [lng, lat]
-    };
-    const geoOptions = {
-        distanceField: "distance.calculated",
-        // calculate distances using spherical geometry
-        spherical: true,
-        // limits how far locations can be
-        maxDistance: 20000,
-        // max results to return
-        $limit: 10
-    };
     try {
-        const results = await LocationModel.aggregate([
-            {
-                $geoNear: {
-                    near,
-                    ...geoOptions
-                }
+        const results = await LocationModel.aggregate([{
+            $geoNear : {
+                near : {type : 'Point', coordinates: [lng, lat]},
+                distanceField: "dist.calculated",
+                maxDistance: 20000,
+                spherical: true
             }
-        ]);
+        }]).limit(10);
         // only return necessary info
         const locations = results.map(extract_location_info)
         return res
@@ -169,3 +156,4 @@ export default {
     locationsDeleteOne,
     locationsListByDistance
 };
+
