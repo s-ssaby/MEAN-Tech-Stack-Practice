@@ -11,7 +11,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const renderHomepage = (req, res, apiBody) => {
-    console.log(apiBody)
     res.render('locations-list', {
         title: 'Locater - find a place to work with WiFi',
         pageHeader: {
@@ -21,6 +20,9 @@ const renderHomepage = (req, res, apiBody) => {
         sidebar: 'Locater helps you find places to work when out and about.',
         locations: apiBody
     });
+};
+const format_distance = (distance) => {
+    return distance + ' m'
 };
 /* Homepage */
 const homelist = async(req, res) => {
@@ -33,8 +35,13 @@ const homelist = async(req, res) => {
             maxDistance: 20
         }
     };
-    const response = await got.get(`${apiOptions.server}${path}`,requestOptions).json()
-    renderHomepage(req, res, response);
+    let data = [];
+    const response = await got.get(`${apiOptions.server}${path}`,requestOptions)
+    const body = response.json()
+    if (response.statusCode === 200 && body.length) {
+        data = response.map( (item) => {item.distance = format_distance(item.distance); return item})
+    }
+    renderHomepage(req, res, data);
 };
 
 /* Location Info */

@@ -118,7 +118,7 @@ const extract_location_info = (result) => {
         rating: result.rating,
         facilities: result.facilities,
         // returns integer meters
-        distance: `${Math.round(result.dist.calculated)} m`
+        distance: `${Math.round(result.dist.calculated)}`
     }
 };
 
